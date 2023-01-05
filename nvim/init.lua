@@ -8,7 +8,7 @@ vim.call("plug#begin")
 
 Plug 'andweeb/presence.nvim'
 Plug 'preservim/nerdtree'
-Plug 'shaunsingh/nord.nvim'
+Plug 'gruvbox-community/gruvbox'
 Plug ('nvim-treesitter/nvim-treesitter', {['do'] = 'TSUpdate'})
 Plug 'tpope/vim-fugitive'
 
@@ -16,7 +16,7 @@ vim.call("plug#end")
 
 -- General settings
 
-require("nord").set()
+vim.cmd([[colorscheme gruvbox]])
 
 vim.opt.number = true
 vim.opt.relativenumber = true

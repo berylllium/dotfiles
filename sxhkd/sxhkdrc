@@ -3,12 +3,12 @@
 #
 
 # full screenshot
-Print
-	~/scripts/maim_screenshot full
+super + s
+	~/scripts/screenshot.sh full
 
 # full screenshot
-control + Print
-	~/scripts/maim_screenshot select
+super + shift + s
+	~/scripts/screenshot.sh select
 
 # terminal emulator
 super + Return

@@ -9,5 +9,8 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/plenary.nvim'
 Plug ('nvim-telescope/telescope.nvim', {['tag'] = '0.1.2'})
 Plug ('akinsho/toggleterm.nvim', {['tag'] = '*'})
+--Plug ("berylllium/session-manager", {['tag'] = 'v1.0.0'})
+Plug "berylllium/session-manager"
+Plug "vim-scripts/DoxygenToolkit.vim"
 
 vim.call("plug#end")

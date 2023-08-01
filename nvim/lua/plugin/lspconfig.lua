@@ -6,6 +6,9 @@ vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, { noremap=true, silent=true }
 vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { noremap=true, silent=true })
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap=true, silent=true })
 
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+
 -- C/C++
 lspconfig.ccls.setup {
 	init_options = {
@@ -16,6 +19,17 @@ lspconfig.ccls.setup {
 		clang = {
       		excludeArgs = { "-frounding-math" } ;
 		};
+	}
+}
+
+-- Rust
+lspconfig.rust_analyzer.setup {
+	settings = {
+		['rust-analyzer'] = {
+			diagnostics = {
+				enable = true
+			}
+		}
 	}
 }
 

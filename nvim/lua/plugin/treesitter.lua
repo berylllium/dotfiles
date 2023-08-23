@@ -6,7 +6,7 @@ end
 
 configs.setup(
 {
-	ensure_installed = {"cpp", "lua", "c", "make", "markdown_inline", "json", "bash", "rust"},
+	ensure_installed = {"cpp", "lua", "c", "make", "markdown_inline", "json", "bash", "rust", "latex"},
 	sync_install = false,
 	ignore_install = {""},
 	highlight = {

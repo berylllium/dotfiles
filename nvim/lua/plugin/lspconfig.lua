@@ -9,15 +9,26 @@ vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap=true, silent=true })
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 
+-- Enable manual completion.
+vim.api.nvim_create_autocmd('LspAttach', {
+	group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+	callback = function(ev)
+		vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+	end
+})
+
+-- Disable scratch buffer creation.
+vim.cmd("set completeopt-=preview")
+
 -- C/C++
 lspconfig.ccls.setup {
 	init_options = {
-		compilationDatabaseDirectory = "build";
+		compilationDatabaseDirectory = "build/";
 		index = {
 			threads = 0;
 		};
 		clang = {
-      		excludeArgs = { "-frounding-math" } ;
+	  		excludeArgs = { "-frounding-math" };
 		};
 	}
 }

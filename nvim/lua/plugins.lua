@@ -12,5 +12,6 @@ Plug ('akinsho/toggleterm.nvim', {['tag'] = '*'})
 --Plug ("berylllium/session-manager", {['tag'] = 'v1.0.0'})
 Plug "berylllium/session-manager"
 Plug "vim-scripts/DoxygenToolkit.vim"
+Plug "mfussenegger/nvim-dap"
 
 vim.call("plug#end")

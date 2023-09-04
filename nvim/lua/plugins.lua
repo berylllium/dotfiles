@@ -13,6 +13,7 @@ Plug ('akinsho/toggleterm.nvim', {['tag'] = '*'})
 Plug "berylllium/session-manager"
 Plug "vim-scripts/DoxygenToolkit.vim"
 Plug "mfussenegger/nvim-dap"
+Plug 'theHamsta/nvim-dap-virtual-text'
 Plug "kevinhwang91/promise-async"
 Plug "kevinhwang91/nvim-ufo"
 

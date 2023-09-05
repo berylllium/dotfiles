@@ -1,14 +1,17 @@
 --- Berrys init.lua
 
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
 require "plugins"
 require "options"
-require "plugin.gruvbox"
-require "plugin.presence"
-require "plugin.telescope"
-require "plugin.treesitter"
-require "plugin.nvim-ufo"
-require "plugin.lspconfig"
-require "plugin.toggleterm"
-require "plugin.session-manager"
-require "plugin.nvim-dap"
-require "plugin.nvim-dap-virtual-text"

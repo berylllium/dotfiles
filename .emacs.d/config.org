@@ -208,6 +208,15 @@ Use evil because I'm too used to vim keybindings.
 Package for toggling latex snippets in org files.
 #+begin_src emacs-lisp
   (use-package org-fragtog
+    :after org
     :config
     (add-hook 'org-mode-hook 'org-fragtog-mode))
+#+end_src
+** Org Appear
+This package hides markup around words, and reveals them when the cursor is inside them.
+#+begin_src emacs-lisp
+  (use-package org-appear
+    :after org
+    :config
+    (add-hook 'org-mode-hook 'org-appear-mode))
 #+end_src

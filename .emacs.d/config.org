@@ -131,6 +131,11 @@ Use the gruvbox theme.
 ** Evil
 Use evil because I'm too used to vim keybindings.
 #+begin_src emacs-lisp
+  (use-package undo-tree
+    :config
+    (setq undo-tree-auto-save-history nil)
+    (global-undo-tree-mode 1))
+
   (defun switch-to-last-buffer ()
     (interactive)
     (switch-to-buffer nil))
@@ -156,6 +161,7 @@ Use evil because I'm too used to vim keybindings.
     (setq evil-want-keybinding nil)
     (setq evil-want-C-u-scroll t)
     (setq evil-want-C-i-jump nil)
+    (setq evil-undo-system 'undo-tree)
     :config
     (evil-mode 1)
     (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)

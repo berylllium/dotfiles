@@ -36,6 +36,11 @@ The bell sound is very annoying and frequent, so replace it with a visual bell.
 #+begin_src emacs-lisp
   (setq visible-bell t)
 #+end_src
+** Following symlinks
+Emacs will ask to follow symlinks by default. Disable this behavior.
+#+begin_src emacs-lisp
+  (setq vc-follow-symlinks t)
+#+end_src
 * Package Management
 ** Initialize package sources
 #+begin_src emacs-lisp
@@ -186,7 +191,11 @@ Use evil because I'm too used to vim keybindings.
   (defun berry/org-mode-setup ()
     (org-indent-mode)
     (visual-line-mode 1)
-    (setq evil-auto-indent nil))
+    (setq evil-auto-indent nil)
+
+    ;; Preview all latex fragments.
+    (setq current-prefix-arg '(16))
+    (call-interactively 'org-latex-preview))
 
   (use-package org
     :hook (org-mode . berry/org-mode-setup)
@@ -197,7 +206,7 @@ Use evil because I'm too used to vim keybindings.
     (setq org-agenda-start-with-log-mode t)
     (setq org-log-done 'time)
     (setq org-log-into-drawer t)
-  
+
     (setq org-agenda-files '("~/documents/notes/informatica.org"))
 
     (define-key org-mode-map (kbd "<normal-state> C-k") 'switch-to-last-buffer)

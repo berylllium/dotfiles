@@ -71,7 +71,11 @@ Emacs will ask to follow symlinks by default. Disable this behavior.
 #+begin_src emacs-lisp
   (column-number-mode)
   (global-display-line-numbers-mode t)
-  (setq display-line-numbers 'relative)
+  (setq display-line-numbers-type 'relative)
+#+end_src
+** Tabs
+#+begin_src emacs-lisp
+  (setq-default tab-width 4)
 #+end_src
 ** Theme
 Use the gruvbox theme.
@@ -228,4 +232,55 @@ This package hides markup around words, and reveals them when the cursor is insi
     :after org
     :config
     (add-hook 'org-mode-hook 'org-appear-mode))
+#+end_src
+* Discord Rich Presence
+#+begin_src emacs-lisp
+  (use-package elcord
+    :config
+    (setq elcord-display-elapsed nil)
+    (setq elcord-display-line-numbers nil)
+    (setq elcord-use-major-mode-as-main-icon t)
+    (setq elcord-idle-timer nil)
+    (elcord-mode))
+#+end_src
+* Development
+** Projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :init
+    (setq projectile-project-search-path '(("~/prgm/" . 2)))
+    :config
+    (projectile-mode +1)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+#+end_src
+** Treesitter
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :hook ((c-mode c++-mode) . (lambda () (tree-sitter-mode) (tree-sitter-hl-mode)))
+    :config
+    (require 'tree-sitter))
+
+  (use-package tree-sitter-langs
+    :config
+    (require 'tree-sitter-langs))
+#+end_src
+** Lsp
+#+begin_src emacs-lisp
+  (use-package lsp-ui
+    :config
+    (setq lsp-ui-sideline-enable t)
+    (setq lsp-ui-sideline-show-hover nil)
+    (setq lsp-ui-doc-position 'bottom))
+
+  (use-package lsp-mode
+    :commands lsp)
+#+end_src
+** C/C++
+#+begin_src emacs-lisp
+  (use-package ccls
+    :hook ((c-mode c++-mode) .
+           (lambda () (require 'ccls) (lsp)))
+    :config
+    (setq ccls-initialization-options '(:compilationDatabaseDirectory "build/"))
+    (setq c-basic-offset 4))
 #+end_src

@@ -190,6 +190,16 @@ Use evil because I'm too used to vim keybindings.
     :config
     (evil-collection-init))
 #+end_src
+*** Leader Bindings (general.el)
+#+begin_src emacs-lisp
+  (use-package general
+    :config
+    (general-evil-setup t)
+
+    (general-create-definer berry/leader-key-def
+                            :keymaps '(normal insert visual emacs)
+                            :prefix "\\"))
+#+end_src
 * Org Mode
 #+begin_src emacs-lisp
   (defun berry/org-mode-setup ()
@@ -251,7 +261,12 @@ This package hides markup around words, and reveals them when the cursor is insi
     (setq projectile-project-search-path '(("~/prgm/" . 2)))
     :config
     (projectile-mode +1)
-    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+
+    (berry/leader-key-def
+      "pf" 'projectile-find-file
+      "pp" 'projectile-switch-project))
 #+end_src
 ** Treesitter
 #+begin_src emacs-lisp
@@ -265,6 +280,7 @@ This package hides markup around words, and reveals them when the cursor is insi
     (require 'tree-sitter-langs))
 #+end_src
 ** Lsp
+For some reason, the lsp lens feature lags my emacs out.
 #+begin_src emacs-lisp
   (use-package lsp-ui
     :config
@@ -273,7 +289,15 @@ This package hides markup around words, and reveals them when the cursor is insi
     (setq lsp-ui-doc-position 'bottom))
 
   (use-package lsp-mode
-    :commands lsp)
+    :commands lsp
+    :config
+    (setq lsp-lens-enable nil))
+#+end_src
+*** Flycheck
+Flycheck replaces the old flymake.
+#+begin_src emacs-lisp
+  (use-package flycheck
+    :hook (lsp-mode . flycheck-mode))
 #+end_src
 ** C/C++
 #+begin_src emacs-lisp

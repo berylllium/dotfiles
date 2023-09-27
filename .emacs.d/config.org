@@ -370,7 +370,7 @@ Flycheck replaces the old flymake.
   (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode"))
 
   (setq dap-lldb-debugged-program-function (lambda ()
-                                             (read-file-name "Select executable to debug." projectile-project-root)))
+                                             (read-file-name "Select executable to debug." (projectile-project-root))))
 
   (dap-register-debug-template
    "LLDB Debug"

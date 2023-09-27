@@ -264,7 +264,7 @@ This package hides markup around words, and reveals them when the cursor is insi
 ** Terminal
 #+begin_src emacs-lisp
   (defun berry/toggle-term ()
-    "Toggle the terminal buffer window"
+    "Toggle the terminal buffer window."
     (interactive)
     (let ((w (get-buffer-window "*terminal*")) (prgm "/bin/bash"))
       (if w
@@ -274,7 +274,15 @@ This package hides markup around words, and reveals them when the cursor is insi
           (select-window w)
           (term prgm)))))
 
+  (defun berry/kill-toggle-term-buffer ()
+    "Kill the terminal buffer."
+    (interactive)
+    (let ((w nil))
+      (when (setq w (get-buffer "*terminal*"))
+        (kill-buffer w))))
+
   (define-key evil-normal-state-map (kbd "C-\\") 'berry/toggle-term)
+  (define-key evil-normal-state-map (kbd "C-|") 'berry/kill-toggle-term-buffer)
 #+end_src
 ** Git
 *** Magit

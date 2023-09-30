@@ -28,23 +28,28 @@
 ;; The bell sound is very annoying and frequent, so replace it with a visual bell.
 (setq visible-bell t)
 
+;; System Settings
+(setq berry/is-guix-system (eq system-type 'gnu/linux))
+
 ;; Package Management
-;; Initialize package sources
-(require 'package)
+;; Bootstrap straight.el.
+(unless (featurep 'straight)
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage)))
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
-
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-
-;; Initialize use-package
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
+;; Use straight.el for use-package expressions.
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
 ;; General Configuration
 ;; Font

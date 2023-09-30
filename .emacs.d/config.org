@@ -25,7 +25,7 @@ Set the custom file so init.el doesn't get cluttered with auto-generated stuff.
 #+end_src
 *** Disable fringes
 #+begin_src emacs-lisp
-  (set-fringe-mode -1)
+  (set-fringe-mode 10)
 #+end_src
 *** Disable menubar
 #+begin_src emacs-lisp
@@ -333,6 +333,7 @@ For some reason, the lsp lens feature lags my emacs out.
     (setq lsp-ui-doc-position 'bottom))
 
   (use-package lsp-mode
+    :hook 'lsp-enable-which-key-integration
     :commands lsp
     :config
     (setq lsp-lens-enable nil))
@@ -345,20 +346,25 @@ Flycheck replaces the old flymake.
 #+end_src
 *** C/C++
 #+begin_src emacs-lisp
-  (use-package ccls
-    :hook ((c-mode c++-mode) .
-           (lambda () (require 'ccls) (lsp)))
-    :config
-    (setq ccls-initialization-options '(:compilationDatabaseDirectory "build/"))
+  ;;  (use-package ccls
+  ;;    :hook ((c-mode c++-mode) .
+  ;;           (lambda () (require 'ccls) (lsp)))
+  ;;    :config
+  ;;    (setq ccls-initialization-options '(:compilationDatabaseDirectory "build/"))
+  ;;
+  ;;    ;; Set style variables.
+  ;;    (c-set-offset 'innamespace 0)
+  ;;
+  ;;    (setq-default lsp-enable-indentation nil
+  ;;                  lsp-enable-on-type-formatting nil
+  ;;                  c-default-style "bsd"
+  ;;                  c-basic-offset 4
+  ;;                  tab-width 4))
 
-    ;; Set style variables.
-    (c-set-offset 'innamespace 0)
+  (add-hook 'c++-mode-hook 'lsp)
 
-    (setq-default lsp-enable-indentation nil
-                  lsp-enable-on-type-formatting nil
-                  c-default-style "bsd"
-                  c-basic-offset 4
-                  tab-width 4))
+  (with-eval-after-load 'lsp-mode
+    (require 'dap-cpptools))
 #+end_src
 ** Dap
 #+begin_src emacs-lisp
@@ -369,30 +375,53 @@ Flycheck replaces the old flymake.
                                  (dap-tooltip-mode 1)
                                  (dap-ui-controls-mode 1)))
     :config
-    (setq dap-auto-configure-features '(locals tooltip)))
+    (setq dap-auto-configure-features '(locals controls tooltip)))
 #+end_src
 *** C/C++
 #+begin_src emacs-lisp
-  (require 'dap-lldb)
+  ;;  (require 'dap-lldb)
+  ;;
+  ;;  (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode"))
+  ;;
+  ;;  (setq dap-lldb-debugged-program-function (lambda ()
+  ;;                                             (read-file-name "Select executable to debug: " (projectile-project-root))))
+  ;;
+  ;;  (dap-register-debug-template
+  ;;   "LLDB Debug Launch"
+  ;;   (list :type "lldb-vscode"
+  ;;         :cwd nil
+  ;;         :args nil
+  ;;         :request "launch"
+  ;;         :program nil))
 
-  (setq dap-lldb-debug-program '("/usr/bin/lldb-vscode"))
+  (require 'dap-cpptools)
 
-  (setq dap-lldb-debugged-program-function (lambda ()
-                                             (read-file-name "Select executable to debug." (projectile-project-root))))
+  ;;  (defun berry/dap-cpptools-populate-start-args (conf)
+  ;;    "Populate nil args with defaults."
+  ;;    (lambda (conf)
+  ;;      (dap--put-if-absent conf :program (list ((lambda ()
+  ;;                                                 (read-file-name "Select executable to debug: " (projectile-project-root))))))))
+  ;;
+  ;;  ;;(dap-register-debug-provider "cppdbg" 'berry/dap-cpptools-populate-start-args)
+  ;;
+  ;;  (dap-register-debug-template
+  ;;   "Debug Launch"
+  ;;   (list :name "Debug Launch (VSCode)"
+  ;;         :type "cppdbg"
+  ;;         :cwd "/home/berry/prgm/cpp/assignment-1/build/"
+  ;;         :args nil
+  ;;         :request "launch"
+  ;;         :MIMode: "gdb"
+  ;;         :miDebufferPath "/usr/bin/gdb"
+  ;;         :program "/home/berry/prgm/cpp/assignment-1/build/opdracht1"))
 
-  (dap-register-debug-template
-   "LLDB Debug"
-   (list :type "lldb-vscode"
-         :cwd nil
-         :args nil
-         :request "launch"
-         :program nil))
 #+end_src
 
 Keybinds:
 #+begin_src emacs-lisp
   (berry/leader-key-def
-    "dd" 'dap-debug-last
+    "dd" 'dap-debug
+    "dl" 'dap-debug-last
     "db" 'dap-breakpoint-toggle
     "ds" 'dap-step-in
     "dn" 'dap-next

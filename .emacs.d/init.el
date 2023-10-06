@@ -53,7 +53,7 @@
 
 ;; General Configuration
 ;; Font
-(set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 120)
+(set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 140)
 
 ;; Line numbers
 (column-number-mode)
@@ -220,9 +220,12 @@
 
 ;; Discord Rich Presence
 (use-package elcord
+  :straight (elcord :type git :host github :repo "berylllium/elcord")
+  :after projectile
   :config
   (setq elcord-display-elapsed nil)
   (setq elcord-display-line-numbers nil)
+  (setq elcord-display-project-name t)
   (setq elcord-use-major-mode-as-main-icon t)
   (setq elcord-idle-timer nil)
   (elcord-mode))
@@ -269,7 +272,7 @@
 ;; Projectile
 (use-package projectile
   :init
-  (setq projectile-project-search-path '(("~/prgm/" . 2)))
+  (setq projectile-project-search-path '(("~/prgm/" . 2) ("~/documents/tex/" . 2) ("~/documents/lise/" . 1)))
   :config
   (projectile-mode +1)
   
@@ -336,7 +339,8 @@
                                (dap-tooltip-mode 1)
                                (dap-ui-controls-mode 1)))
   :config
-  (setq dap-auto-configure-features '(locals controls tooltip)))
+  (setq dap-auto-configure-features '(locals controls tooltip))
+  (setq dap-auto-show-output nil))
 
 ;; C/C++
 ;;  (require 'dap-lldb)
@@ -356,24 +360,22 @@
 
 (require 'dap-cpptools)
 
-;;  (defun berry/dap-cpptools-populate-start-args (conf)
-;;    "Populate nil args with defaults."
-;;    (lambda (conf)
-;;      (dap--put-if-absent conf :program (list ((lambda ()
-;;                                                 (read-file-name "Select executable to debug: " (projectile-project-root))))))))
+;;(defun berry/dap-cpptools-populate-start-args (conf)
+;;  "Populate nil args with defaults."
+;;  (lambda (conf)
+;;    (dap--put-if-absent conf :program (list ((lambda ()
+;;                                               (read-file-name "Select executable to debug: " (projectile-project-root))))))))
 ;;
-;;  ;;(dap-register-debug-provider "cppdbg" 'berry/dap-cpptools-populate-start-args)
+;;(dap-register-debug-provider "cppdbg" 'berry/dap-cpptools-populate-start-args)
 ;;
-;;  (dap-register-debug-template
-;;   "Debug Launch"
-;;   (list :name "Debug Launch (VSCode)"
-;;         :type "cppdbg"
-;;         :cwd "/home/berry/prgm/cpp/assignment-1/build/"
-;;         :args nil
-;;         :request "launch"
-;;         :MIMode: "gdb"
-;;         :miDebufferPath "/usr/bin/gdb"
-;;         :program "/home/berry/prgm/cpp/assignment-1/build/opdracht1"))
+;;(dap-register-debug-template
+;; "Debug Launch"
+;; (list :name "Debug Launch (VSCode)"
+;;       :type "cppdbg"
+;;       :cwd nil
+;;       :args nil
+;;       :request "launch"
+;;       :program nil))
 
 (berry/leader-key-def
   "dd" 'dap-debug

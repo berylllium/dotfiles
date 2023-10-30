@@ -231,6 +231,25 @@
   (elcord-mode))
 
 ;; Development
+;; Treemacs
+(use-package treemacs
+  :defer t
+  :config
+  (treemacs-hide-gitignored-files-mode nil)
+
+  (treemacs-follow-mode t)
+  (treemacs-filewatch-mode t)
+
+  (berry/leader-key-def
+    "mm" 'treemacs-select-window
+    "mc" 'treemacs))
+
+(use-package treemacs-evil
+  :after (treemacs evil))
+
+(use-package treemacs-projectile
+  :after (treemacs projectile))
+
 ;; General Development Configs
 ;; Color Column (fill column, ruler)
 (add-hook 'prog-mode-hook (lambda ()
@@ -314,22 +333,22 @@
   :hook (lsp-mode . flycheck-mode))
 
 ;; C/C++
-;;  (use-package ccls
-;;    :hook ((c-mode c++-mode) .
-;;           (lambda () (require 'ccls) (lsp)))
-;;    :config
-;;    (setq ccls-initialization-options '(:compilationDatabaseDirectory "build/"))
-;;
-;;    ;; Set style variables.
-;;    (c-set-offset 'innamespace 0)
-;;
-;;    (setq-default lsp-enable-indentation nil
-;;                  lsp-enable-on-type-formatting nil
-;;                  c-default-style "bsd"
-;;                  c-basic-offset 4
-;;                  tab-width 4))
+(use-package ccls
+  :hook ((c-mode c++-mode) .
+         (lambda () (require 'ccls) (lsp)))
+  :config
+  (setq ccls-initialization-options '(:compilationDatabaseDirectory "build/"))
+  
+  ;; Set style variables.
+  (c-set-offset 'innamespace 0)
+  
+  (setq-default lsp-enable-indentation nil
+                lsp-enable-on-type-formatting nil
+                c-default-style "bsd"
+                c-basic-offset 4
+                tab-width 4))
 
-(add-hook 'c++-mode-hook 'lsp)
+;;(add-hook 'c++-mode-hook 'lsp)
 
 ;; Dap
 (use-package dap-mode

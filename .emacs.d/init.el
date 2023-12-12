@@ -291,7 +291,8 @@
 ;; Projectile
 (use-package projectile
   :init
-  (setq projectile-project-search-path '(("~/prgm/" . 2) ("~/documents/tex/" . 2) ("~/documents/lise/" . 1)))
+  (setq projectile-project-search-path '(("~/prgm/" . 2) ("~/prgm/godot/projects/" . 1) ("~/documents/tex/" . 2)
+                                         ("~/documents/lise/" . 1)))
   :config
   (projectile-mode +1)
   
@@ -346,20 +347,21 @@
                 lsp-enable-on-type-formatting nil
                 c-default-style "bsd"
                 c-basic-offset 4
-                tab-width 4))
+                tab-width 4
+                gdb-show-main t))
 
 ;;(add-hook 'c++-mode-hook 'lsp)
 
 ;; Dap
-(use-package dap-mode
-  :hook ((c-mode c++-mode) . (lambda ()
-                               (dap-mode 1)
-                               (dap-ui-mode 1)
-                               (dap-tooltip-mode 1)
-                               (dap-ui-controls-mode 1)))
-  :config
-  (setq dap-auto-configure-features '(locals controls tooltip))
-  (setq dap-auto-show-output nil))
+;;(use-package dap-mode
+;;  :hook ((c-mode c++-mode) . (lambda ()
+;;                               (dap-mode 1)
+;;                               (dap-ui-mode 1)
+;;                               (dap-tooltip-mode 1)
+;;                               (dap-ui-controls-mode 1)))
+;;  :config
+;;  (setq dap-auto-configure-features '(locals controls tooltip))
+;;  (setq dap-auto-show-output nil))
 
 ;; C/C++
 ;;  (require 'dap-lldb)
@@ -377,7 +379,7 @@
 ;;         :request "launch"
 ;;         :program nil))
 
-(require 'dap-cpptools)
+;;(require 'dap-cpptools)
 
 ;;(defun berry/dap-cpptools-populate-start-args (conf)
 ;;  "Populate nil args with defaults."
@@ -396,11 +398,11 @@
 ;;       :request "launch"
 ;;       :program nil))
 
-(berry/leader-key-def
-  "dd" 'dap-debug
-  "dl" 'dap-debug-last
-  "db" 'dap-breakpoint-toggle
-  "ds" 'dap-step-in
-  "dn" 'dap-next
-  "dc" 'dap-continue
-  "dk" 'dap-disconnect)
+;;(berry/leader-key-def
+;;  "dd" 'dap-debug
+;;  "dl" 'dap-debug-last
+;;  "db" 'dap-breakpoint-toggle
+;;  "ds" 'dap-step-in
+;;  "dn" 'dap-next
+;;  "dc" 'dap-continue
+;;  "dk" 'dap-disconnect)

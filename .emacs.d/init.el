@@ -278,6 +278,8 @@
 (define-key evil-normal-state-map (kbd "C-\\") 'berry/toggle-term)
 (define-key evil-normal-state-map (kbd "C-|") 'berry/kill-toggle-term-buffer)
 
+(use-package powershell)
+
 ;; Git
 ;; Magit
 (use-package magit
@@ -292,7 +294,7 @@
 (use-package projectile
   :init
   (setq projectile-project-search-path '(("~/prgm/" . 2) ("~/prgm/godot/projects/" . 1) ("~/documents/tex/" . 2)
-                                         ("~/documents/lise/" . 1)))
+                                         ("~/documents/lise/" . 1) ("C:\\prgm\\" . 2)))
   :config
   (projectile-mode +1)
   
@@ -320,6 +322,7 @@
   :config
   (setq lsp-ui-sideline-enable t)
   (setq lsp-ui-sideline-show-hover nil)
+  (setq lsp-ui-sideline-diagnostic-max-lines 5)
   (setq lsp-ui-doc-position 'bottom))
 
 (use-package lsp-mode
@@ -332,6 +335,10 @@
 ;; Flycheck replaces the old flymake.
 (use-package flycheck
   :hook (lsp-mode . flycheck-mode))
+
+(use-package rustic
+  :config
+  (require 'rustic))
 
 ;; C/C++
 (use-package ccls

@@ -11,3 +11,5 @@ vim.opt.colorcolumn = "120"
 vim.keymap.set("i", "jk", "<ESC>")
 
 vim.keymap.set("n", "<C-k>", ":b#<Cr>")
+
+--vim.keymap.del("n", "<C-q>")

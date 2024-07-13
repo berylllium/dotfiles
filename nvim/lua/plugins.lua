@@ -45,6 +45,7 @@ local plugins = {
 	},
 	{
 		"neovim/nvim-lspconfig",
+		dependencies = { "hrsh7th/cmp-nvim-lsp" },
 		config = function()
 			local lspconfig = require("lspconfig")
 
@@ -68,6 +69,8 @@ local plugins = {
 			-- Disable scratch buffer creation.
 			vim.cmd("set completeopt-=preview")
 
+			local cmp_caps = require('cmp_nvim_lsp').default_capabilities()
+
 			-- C/C++
 			lspconfig.ccls.setup {
 				init_options = {
@@ -78,19 +81,21 @@ local plugins = {
 					clang = {
 				  		excludeArgs = { "-frounding-math" };
 					};
-				}
+				},
+				capabilities = cmp_caps,
 			}
 
 			-- Rust
-			lspconfig.rust_analyzer.setup {
-				settings = {
-					["rust-analyzer"] = {
-						diagnostics = {
-							enable = true
-						}
-					}
-				}
-			}
+			--lspconfig.rust_analyzer.setup {
+			--	settings = {
+			--		["rust-analyzer"] = {
+			--			diagnostics = {
+			--				enable = true
+			--			}
+			--		}
+			--	},
+			--	capabilities = cmp_caps,
+			--}
 
 			-- Lua
 			lspconfig.lua_ls.setup {
@@ -110,7 +115,8 @@ local plugins = {
 							enable = false
 						}
 					}
-				}
+				},
+				capabilities = cmp_caps,
 			}
 		end
 	},
@@ -260,6 +266,66 @@ local plugins = {
 				}
 			}
 		end
+	},
+	{
+		"NeogitOrg/neogit",
+		dependencies = { "nvim-lua/plenary.nvim", "nvim-telescope/telescope.nvim" },
+		config = function()
+			local neogit = require("neogit")
+
+			neogit.setup {}
+
+			vim.keymap.set("n", "<Leader>gg", function() neogit.open({ kind = "auto" }) end)
+		end,
+	},
+	{
+		"hrsh7th/nvim-cmp",
+		dependencies = {
+			"hrsh7th/vim-vsnip",
+			"hrsh7th/cmp-vsnip",
+			"hrsh7th/cmp-nvim-lsp",
+			"hrsh7th/cmp-buffer",
+		},
+		config = function()
+			local cmp = require('cmp')
+
+			cmp.setup {
+				snipped = {
+					expand = function(args)
+						vim.fn["vsnip#anonymous"](args.body)
+					end,
+				},
+				window = {
+					completion = cmp.config.window.bordered({
+						border = "none",
+					}),
+					documentation = cmp.config.window.bordered(),
+				},
+				mapping = cmp.mapping.preset.insert({
+					['<C-k>'] = cmp.mapping.select_prev_item(),
+					['<C-j>'] = cmp.mapping.select_next_item(),
+					['<C-S-k>'] = cmp.mapping.scroll_docs(-4),
+					['<C-S-j>'] = cmp.mapping.scroll_docs(4),
+					['<C-Space>'] = cmp.mapping.complete(),
+					['<C-q>'] = cmp.mapping.abort(),
+					['<CR>'] = cmp.mapping.confirm({ select = true }),
+				}),
+				sources = cmp.config.sources({
+					{ name = "nvim_lsp" },
+					{ name = "vsnip" },
+				}, {
+					{ name = "buffer" },
+				}),
+				completion = {
+					autocomplete = false,
+				}
+			}
+		end,
+	},
+	{
+		'mrcjkb/rustaceanvim',
+		version = '^4', -- Recommended
+		lazy = false, -- This plugin is already lazy
 	}
 }
 

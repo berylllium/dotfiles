@@ -50,16 +50,19 @@ super + ctrl + k
 super + ctrl + j
 	pactl set-sink-volume @DEFAULT_SINK@ -5%
 
-## Spotify
+## Media
 
 super + ctrl + l
-	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next; \
+	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.cmus /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
 
 super + ctrl + h
-	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous; \
+	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.cmus /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
 
 super + ctrl + p
-	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
+	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause; \
+	dbus-send --print-reply --dest=org.mpris.MediaPlayer2.cmus /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
 #
 # bspwm hotkeys
 #

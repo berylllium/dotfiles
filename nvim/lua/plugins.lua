@@ -329,7 +329,7 @@ local plugins = {
 					['<C-S-j>'] = cmp.mapping.scroll_docs(4),
 					['<C-Space>'] = cmp.mapping.complete(),
 					['<C-q>'] = cmp.mapping.abort(),
-					['<CR>'] = cmp.mapping.confirm({ select = true }),
+					['<Tab>'] = cmp.mapping.confirm({ select = true }),
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
@@ -339,7 +339,15 @@ local plugins = {
 				}),
 				completion = {
 					autocomplete = false,
-				}
+				},
+				formatting = {
+					format = function(_, vim_item)
+						-- Completion window max width of 40.
+						vim_item.abbr = string.sub(vim_item.abbr, 1, 40)
+
+						return vim_item
+					end,
+				},
 			}
 		end,
 	},
@@ -347,6 +355,9 @@ local plugins = {
 		'mrcjkb/rustaceanvim',
 		version = '^4', -- Recommended
 		lazy = false, -- This plugin is already lazy
+		config = function()
+			vim.keymap.set("n", "<C-Space>", function() vim.cmd.RustLsp { 'hover', 'actions' } end)
+		end,
 	}
 }
 

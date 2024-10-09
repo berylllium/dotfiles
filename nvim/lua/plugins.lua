@@ -1,3 +1,5 @@
+local util = require("util")
+
 local plugins = {
 	{
 		"andweeb/presence.nvim",
@@ -127,7 +129,11 @@ local plugins = {
 		config = function()
 			require("telescope").setup {
 				defaults = {
-					file_ignore_patterns = { "^deps/" }
+					file_ignore_patterns = {
+						"^deps/",
+						"^target/",
+						"^.git/",
+					}
 				}
 			}
 
@@ -141,6 +147,21 @@ local plugins = {
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		config = function()
+			if util.os() == "win" then
+				local powershell_options = {
+				  shell = "powershell",
+				  shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
+				  shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
+				  shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",
+				  shellquote = "",
+				  shellxquote = "",
+				}
+
+				for option, value in pairs(powershell_options) do
+				  vim.opt[option] = value
+				end
+			end
+
 			require("toggleterm").setup()
 
 			vim.keymap.set("n", "<C-\\>", ":ToggleTerm<CR>")

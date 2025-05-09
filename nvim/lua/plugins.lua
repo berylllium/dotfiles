@@ -1,3 +1,5 @@
+local util = require("util")
+
 local plugins = {
 	{
 		"andweeb/presence.nvim",
@@ -221,7 +223,11 @@ local plugins = {
 		config = function()
 			require("telescope").setup {
 				defaults = {
-					file_ignore_patterns = { "^deps/" }
+					file_ignore_patterns = {
+						"^deps/",
+						"^target/",
+						"^.git/",
+					}
 				}
 			}
 
@@ -235,6 +241,21 @@ local plugins = {
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		config = function()
+			if util.os() == "win" then
+				local powershell_options = {
+				  shell = "powershell",
+				  shellcmdflag = "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;",
+				  shellredir = "-RedirectStandardOutput %s -NoNewWindow -Wait",
+				  shellpipe = "2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode",
+				  shellquote = "",
+				  shellxquote = "",
+				}
+
+				for option, value in pairs(powershell_options) do
+				  vim.opt[option] = value
+				end
+			end
+
 			require("toggleterm").setup()
 
 			vim.keymap.set("n", "<C-\\>", ":ToggleTerm<CR>")
@@ -402,7 +423,7 @@ local plugins = {
 					['<C-S-j>'] = cmp.mapping.scroll_docs(4),
 					['<C-Space>'] = cmp.mapping.complete(),
 					['<C-q>'] = cmp.mapping.abort(),
-					['<CR>'] = cmp.mapping.confirm({ select = true }),
+					['<Tab>'] = cmp.mapping.confirm({ select = true }),
 				}),
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
@@ -412,7 +433,15 @@ local plugins = {
 				}),
 				completion = {
 					autocomplete = false,
-				}
+				},
+				formatting = {
+					format = function(_, vim_item)
+						-- Completion window max width of 40.
+						vim_item.abbr = string.sub(vim_item.abbr, 1, 40)
+
+						return vim_item
+					end,
+				},
 			}
 		end,
 	},
@@ -420,6 +449,9 @@ local plugins = {
 --		'mrcjkb/rustaceanvim',
 --		version = '^4', -- Recommended
 --		lazy = false, -- This plugin is already lazy
+--		config = function()
+--			vim.keymap.set("n", "<C-Space>", function() vim.cmd.RustLsp { 'hover', 'actions' } end)
+--		end,
 --	}
 }
 

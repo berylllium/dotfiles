@@ -1,6 +1,7 @@
 local plugins = {
 	{
 		"andweeb/presence.nvim",
+		enabled = false,
 		config = function()
 			require("presence").setup {
 				main_image = "file",
@@ -16,22 +17,64 @@ local plugins = {
 		end
 	},
 	{
+		"brooth/far.vim"
+	},
+	{
+		"stevearc/conform.nvim",
+		config = function()
+			local cf = require("conform")
+
+			cf.setup {
+				formatters_by_ft = {
+					c = { "clang_format" },
+					cpp = { "clang_format" },
+					rust = { "rustfmt" },
+				},
+				formatters = {
+					clang_format = {
+						prepend_args = { "--style=file", "--fallback-style=LLVM" }
+					}
+				}
+			}
+
+			vim.api.nvim_create_autocmd("BufWritePre", {
+				pattern = { "*.c", "*.cpp", "*.cc", "*.h", "*.hpp", "*.rs" },
+				callback = function(args)
+					require("conform").format({ bufnr = args.buf })
+				end,
+			})
+		end
+	},
+	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		config = function()
 			local configs = require("nvim-treesitter.configs")
+
+			vim.filetype.add({
+				extension = {
+					vert = "glsl",
+					frag = "glsl"
+				}
+			})
 
 			configs.setup {
 				ensure_installed = {
 					"cpp",
 					"lua",
 					"c",
+					"c_sharp",
+					"java",
 					"make",
 					"markdown_inline",
 					"json",
 					"bash",
 					"rust",
-					"latex"
+					"latex",
+					"ocaml",
+					"prolog",
+					"typst",
+					"glsl"
 				},
 				sync_install = false,
 				ignore_install = {""},
@@ -44,8 +87,43 @@ local plugins = {
 		end
 	},
 	{
+		"chomosuke/typst-preview.nvim",
+		version = "1.*",
+		config = function()
+			require("typst-preview").setup {}
+		end
+	},
+	{
+		"williamboman/mason.nvim",
+		config = function()
+			require("mason").setup()
+		end
+	},
+	{
+		"williamboman/mason-lspconfig.nvim",
+		dependencies = { "williamboman/mason.nvim" },
+		config = function()
+			require("mason-lspconfig").setup {
+				ensure_installed = { "jdtls", "omnisharp" }
+			}
+
+			vim.api.nvim_create_autocmd("LspAttach", {
+				callback = function(args)
+					local client = vim.lsp.get_client_by_id(args.data.client_id)
+					if client ~= nil and client.name == "jdtls" then
+						client.server_capabilities.semanticTokensProvider = nil
+					end
+				end
+			})
+		end
+	},
+	{
+		"mfussenegger/nvim-jdtls",
+		dependencies = { "williamboman/mason-lspconfig.nvim" },
+	},
+	{
 		"neovim/nvim-lspconfig",
-		dependencies = { "hrsh7th/cmp-nvim-lsp" },
+		dependencies = { "hrsh7th/cmp-nvim-lsp", "williamboman/mason-lspconfig.nvim" },
 		config = function()
 			local lspconfig = require("lspconfig")
 
@@ -54,6 +132,7 @@ local plugins = {
 			vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { noremap=true, silent=true })
 			vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { noremap=true, silent=true })
 			vim.keymap.set("n", "K", vim.lsp.buf.hover, { noremap=true, silent=true })
+			vim.keymap.set("n", "<C-.>", vim.lsp.buf.code_action, { noremap=true, silent=true })
 
 			vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 			vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
@@ -85,17 +164,32 @@ local plugins = {
 				capabilities = cmp_caps,
 			}
 
+			-- C#
+			lspconfig.omnisharp.setup {
+				capabilities = cmp_caps,
+			}
+
 			-- Rust
-			--lspconfig.rust_analyzer.setup {
-			--	settings = {
-			--		["rust-analyzer"] = {
-			--			diagnostics = {
-			--				enable = true
-			--			}
-			--		}
-			--	},
-			--	capabilities = cmp_caps,
-			--}
+			lspconfig.rust_analyzer.setup {
+				settings = {
+					["rust-analyzer"] = {
+						diagnostics = {
+							enable = true
+						}
+					}
+				},
+				capabilities = cmp_caps,
+			}
+
+			-- Java
+--			lspconfig.jdtls.setup {
+--				on_attach = function(client)
+--					if client.name == "jdtls" then
+--						client.server_capabilities.semanticTokensProvider = nil
+--					end
+--				end,
+--				capabilities = cmp_caps,
+--			}
 
 			-- Lua
 			lspconfig.lua_ls.setup {
@@ -105,7 +199,7 @@ local plugins = {
 							version = "LuaJIT"
 						},
 						diagnostics = {
-							globals = {"vim"}
+							globals = {"vim", "game", "script", "commands", "helpers", "prototypes", "rcon", "remote", "rendering", "settings", "storage", "serpent", "defines", "log"}
 						},
 						workspace = {
 							library = vim.api.nvim_get_runtime_file("", true),
@@ -322,11 +416,11 @@ local plugins = {
 			}
 		end,
 	},
-	{
-		'mrcjkb/rustaceanvim',
-		version = '^4', -- Recommended
-		lazy = false, -- This plugin is already lazy
-	}
+--	{
+--		'mrcjkb/rustaceanvim',
+--		version = '^4', -- Recommended
+--		lazy = false, -- This plugin is already lazy
+--	}
 }
 
 local opts = {}

@@ -22,6 +22,9 @@ return {
 			-- Disable scratch buffer creation.
 			vim.cmd("set completeopt-=preview")
 
+			-- Enable rust_analyzer, as I usually don't use mason for it.
+			vim.lsp.enable("rust_analyzer")
+
 			local cmp_caps = require('cmp_nvim_lsp').default_capabilities()
 
 			-- C/C++

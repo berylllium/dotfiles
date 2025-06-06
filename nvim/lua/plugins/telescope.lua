@@ -5,6 +5,10 @@ return {
 		"nvim-telescope/telescope.nvim",
 		version = "*",
 		dependencies = { "nvim-lua/plenary.nvim" },
+		keys = {
+			{ "<leader>ff", "<cmd>Telescope file_browser<cr>" },
+			{ "<leader>fb", "<cmd>Telescope buffers<cr> "}
+		},
 		opts = function()
 			local actions = require("telescope.actions")
 
@@ -24,6 +28,9 @@ return {
 								["<C-j>"] = actions.move_selection_next,
 								["<C-k>"] = actions.move_selection_previous,
 								["<C-Space>"] = actions.select_default,
+							},
+							["n"] = {
+								["<Space>"] = actions.select_default,
 							}
 						},
 					}
@@ -41,10 +48,6 @@ return {
 			-- vim.keymap.set("n", "<leader>ff", telescope.extensions.file_browser.file_browser)
 			-- vim.keymap.set("n", "<leader>fb", builtin.buffers)
 		end,
-		keys = {
-			{ "<leader>ff", "<cmd>Telescope file_browser<cr>" },
-			{ "<leader>fb", "<cmd>Telescope buffers<cr> "}
-		}
 	},
 	{
 		"nvim-telescope/telescope-file-browser.nvim",

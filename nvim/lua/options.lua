@@ -12,7 +12,7 @@ vim.opt.colorcolumn = "120"
 
 vim.keymap.set("i", "jk", "<ESC>")
 
-vim.keymap.set("n", "<C-k>", ":b#<Cr>")
+vim.keymap.set("n", "<C-k>", "<cmd>b#<Cr>")
 
 if util.os() == "win" then
 	vim.api.nvim_set_option_value("fsync", false, { scope = "global" })

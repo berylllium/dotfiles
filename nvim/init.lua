@@ -1,4 +1,5 @@
 --- Berrys init.lua
+require("prelazy")
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -14,5 +15,4 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup("plugins")
---require "plugins"
-require "options"
+require("options")

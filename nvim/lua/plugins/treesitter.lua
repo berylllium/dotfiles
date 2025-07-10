@@ -22,7 +22,7 @@ return {
 				"glsl"
 			},
 			sync_install = false,
-			ignore_install = {""},
+			ignore_install = {"org"},
 			highlight = {
 				enable = true,
 				disable = {""},

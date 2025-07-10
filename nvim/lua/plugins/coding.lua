@@ -31,4 +31,19 @@ return {
 			})
 		end
 	},
+	-- Tabbing out of quotes, braces, etc.
+	{
+		"abecodes/tabout.nvim",
+		lazy = false,
+		dependencies = {
+			"nvim-treesitter/nvim-treesitter",
+			"hrsh7th/nvim-cmp"
+		},
+		opts = {}
+	},
+	-- Automatically close quotes, braces, etc.
+	{
+		"m4xshen/autoclose.nvim",
+		opts = {},
+	}
 }

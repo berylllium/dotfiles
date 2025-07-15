@@ -1,4 +1,5 @@
-;; Bootstrap straight.
+;; Bootstraps.
+;;; Bootstrap straight.
 (setq straight-use-package-by-default t)
 (setq straight-vc-git-default-clone-depth 1)
 (defvar bootstrap-version)
@@ -27,6 +28,19 @@
 (set-fringe-mode 10)
 (menu-bar-mode -1)
 
+;; Functions.
+(defun open-init-file ()
+  "Open the init.el file in the current window."
+  (interactive)
+  (find-file user-init-file))
+    
+(defun switch-to-messages-buffer ()
+  "Switch to the `*Messages*` buffer in the current window."
+  (interactive)
+  (with-current-buffer (messages-buffer)
+    (goto-char (point-max))
+    (switch-to-buffer (current-buffer))))
+
 ;; Packages.
 ;;; use-package configuration.
 (setq use-package-always-ensure t) ;; Always ensure packages are installed.
@@ -50,8 +64,25 @@
   (tyrant-def
     "SPC" '("M-x" . execute-extended-command)
 
-    "b" (cons "buffers" (make-sparse-keymap))
-    "bb" 'switch-to-buffer))
+    "b" (cons "buffer" (make-sparse-keymap))
+    "bb" 'switch-to-buffer
+    "bB" 'ibuffer
+    "bk" 'kill-current-buffer
+    "bm" 'switch-to-messages-buffer
+    "bs" 'scratch-buffer
+    "bl" '("last-buffer" . evil-switch-to-windows-last-buffer)
+
+    "e" (cons "eval" (make-sparse-keymap))
+    "el" 'eval-last-sexp
+
+    "f" (cons "file" (make-sparse-keymap))
+    "ff" 'find-file
+    "fi" 'open-init-file
+    "fj" 'dired-jump
+
+    "h" (cons "help" (make-sparse-keymap))
+    "hf" 'describe-function
+    "hv" 'describe-variable))
 
 ;;; ========== EVIL ==========
 ;;; VIM bindings in emacs :).

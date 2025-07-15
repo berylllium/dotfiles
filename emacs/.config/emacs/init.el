@@ -31,6 +31,28 @@
 ;;; use-package configuration.
 (setq use-package-always-ensure t) ;; Always ensure packages are installed.
 
+;;; ========== GENERAL ==========
+(use-package general
+  :after evil
+  :config
+  (general-auto-unbind-keys)
+
+  (general-define-key
+   :states '(normal insert motion visual emacs)
+   :keymaps 'override
+   :prefix-map 'tyrant-map
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC")
+
+  (general-create-definer tyrant-def :keymaps 'tyrant-map)
+  (tyrant-def "" nil)
+
+  (tyrant-def
+    "SPC" '("M-x" . execute-extended-command)
+
+    "b" (cons "buffers" (make-sparse-keymap))
+    "bb" 'switch-to-buffer))
+
 ;;; ========== EVIL ==========
 ;;; VIM bindings in emacs :).
 (use-package evil
@@ -88,6 +110,18 @@
      ("NOTE" success bold)
      ("BUG" error bold)
      ("XXX" font-lock-constant-face bold))))
+
+;;; ========== Helpful Packages ==========
+;;; Which key.
+(use-package which-key
+  :ensure nil ;; which-key is included in emacs v30.
+  :hook (after-init . which-key-mode)
+  :config
+  (setq which-key-echo-keystrokes 0.02
+	which-key-idle-delay 0.4
+	which-key-idle-secondary-delay 0.04
+	which-key-sort-order 'which-key-key-order-alpha
+	which-key-allow-evil-operators t))
 
 ;;; ========== Completion ========== 
 ;;; Completion.

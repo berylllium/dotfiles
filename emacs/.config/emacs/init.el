@@ -192,11 +192,22 @@
   (completion-category-overrides '((file (styles orderless partial-completion))))
   (orderless-component-seperator #'orderless-escapable-split-on-space))
 
+;;; ========== Projectile ==========
+(use-package projectile
+  :general
+  (tyrant-def
+    "p" (cons "project" (make-sparse-keymap))
+    "pf" 'projectile-find-file
+    "pp" 'projectile-switch-project)
+  :config
+  (setq projectile-project-search-path '(("~/dotfiles" . 0) ("~/prgm" . 2)))
+  (projectile-mode +1))
+
 ;;; ========== Coding ==========
 ;;; Automatic parens.
 ;;; NOTE: Only enabled in emacs-lisp-mode.
 (use-package smartparens
-  :hook (emacs-lisp-mode-hook . smartparens-mode))
+  :hook ((prog-mode org-mode). smartparens-mode))
 
 ;;; ========== Orgmode ==========
 ;;; Helper functions for org.
@@ -262,6 +273,3 @@
 
   (setq org-latex-preview-live t
 	org-latex-preview-live-debounce 0.25))
-
-;;; Live updated table of contents in org-mode.
-(use-package toc-org

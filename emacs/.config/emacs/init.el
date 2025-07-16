@@ -33,6 +33,7 @@
 (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 110)
 
 ;;; Set org directory here so we can use it before the autoload.
+;;; TODO: Try moving this to the :init keyword of the org package instead.
 (setq org-directory "~/org")
 
 ;;; Disable the usage of tab characters.
@@ -88,6 +89,7 @@
     "bl" '("last-buffer" . evil-switch-to-windows-last-buffer)
 
     "e" (cons "eval" (make-sparse-keymap))
+    "ee" 'eval-expression
     "el" 'eval-last-sexp
     "er" 'eval-region
 
@@ -131,6 +133,7 @@
   :after evil
   :general
   (general-nmap
+    "S" 'avy-goto-line
     "s" 'avy-goto-char-2))
 
 ;;; ========== Appearance ==========
@@ -139,6 +142,11 @@
   ;; Use a hook to only load the theme after the init hook as completed to ensure
   ;; the theme has been autoloaded.
   :hook (after-init-hook . (lambda () (load-theme 'gruvbox-dark-medium t))))
+
+;;; Doom modeline.
+(use-package doom-modeline
+  :init
+  (doom-modeline-mode 1))
 
 ;;; Highlighting todo's in comments. I got the keyword faces from the doom emacs config.
 (use-package hl-todo
@@ -227,7 +235,40 @@
 ;;; LSP.
 (use-package lsp-mode
   :hook (lsp-mode . lsp-enable-which-key-integration)
-  :commands (lsp lsp-deferred))
+  :commands (lsp lsp-deferred)
+  :config
+  (setq lsp-headerline-breadcrumb-enable nil))
+
+(use-package lsp-ui
+  :commands lsp-ui-mode)
+
+;; Tree sitter. HOPEFULLY THE BUILT IN ONE.
+(defun berry/tree-sitter-install-languages ()
+  "Installs all the languages in `treesit-language-source-alist'."
+  (interactive)
+  (mapc #'treesit-install-language-grammar
+	(mapcar #'car treesit-language-source-alist)))
+
+(use-package tree-sitter
+  :ensure nil
+  :init
+  (setq treesit-language-source-alist
+	`((bash . ("https://github.com/tree-sitter/tree-sitter-bash"
+		   "v0.25.0"))
+	  (elisp . ("https://github.com/Wilfred/tree-sitter-elisp"))
+	  (json . ("https://github.com/tree-sitter/tree-sitter-json"
+		   "v0.24.8"))
+	  (make . ("https://github.com/alemuller/tree-sitter-make"))
+	  (toml . ("https://github.com/ikatyang/tree-sitter-toml"
+		   "v0.5.1"))
+	  (rust . ("https://github.com/tree-sitter/tree-sitter-rust"
+		   "v0.24.0")))))
+
+(use-package rust-mode
+  :hook (rust-mode . lsp)
+  :init
+  (setq rust-mode-treesitter-derive t
+	rust-format-on-save t))
 
 ;;; ========== Git ==========
 ;;; Custom magit display buffer function.
@@ -286,7 +327,7 @@
                      :repo "https://git.tecosaur.net/tec/org-mode.git"
                      :branch "dev"
                      :remote "tecosaur"
-					 :depth 1)
+		     :depth 1)
               :files (:defaults "etc")
               :build t
               :pre-build

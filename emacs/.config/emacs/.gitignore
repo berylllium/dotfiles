@@ -4,3 +4,6 @@ straight/
 tramp
 transient/
 projectile*
+elpa/
+tree-sitter/
+.lsp-*

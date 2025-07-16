@@ -19,29 +19,28 @@
   (load bootstrap-file nil 'nomessage))
 
 ;; Emacs settings.
-;; Disable base Emacs features.
-(setq inhibit-startup-message t
-      make-backup-files nil)
+(use-package emacs
+  :ensure nil
+  :straight (:type built-in)
+  :init
+  ;; Disable base Emacs features.
+  (setq inhibit-startup-message t
+	make-backup-files nil)
 
-(scroll-bar-mode -1)
-(tool-bar-mode -1)
-(tooltip-mode -1)
-(set-fringe-mode 10)
-(menu-bar-mode -1)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1)
+  (set-fringe-mode 10)
+  (menu-bar-mode -1)
+  ;; Set font.
+  (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 110)
 
-;;; Set font.
-(set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 110)
-
-;;; Set org directory here so we can use it before the autoload.
-;;; TODO: Try moving this to the :init keyword of the org package instead.
-(setq org-directory "~/org")
-
-;;; Disable the usage of tab characters.
-(setq indent-tabs-mode nil)
-
-;;; Enable line numbering only in programming buffers.
-;;(setq-default display-line-numbers-type 'relative)
-;;(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  ;; Enable line numbering only in programming buffers.
+  ;;(setq-default display-line-numbers-type 'relative)
+  ;;(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+  
+  ;; Disable the usage of tab characters.
+  (setq indent-tabs-mode nil))
 
 ;; Functions.
 (defun open-init-file ()
@@ -354,6 +353,8 @@
          ;; happen asyncronously.
          (org-mode . (lambda () (with-current-buffer (current-buffer)
                                   (org-latex-preview '(16))))))
+  :init
+  (setq org-directory "~/org")
   :config
   (org-init-appearance-h)
   (org-init-hacks-h)

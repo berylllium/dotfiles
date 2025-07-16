@@ -179,6 +179,7 @@
 ;;; Which key.
 (use-package which-key
   :ensure nil ;; which-key is included in emacs v30.
+  :straight (:type built-in)
   :hook (after-init . which-key-mode)
   :config
   (setq which-key-echo-keystrokes 0.02
@@ -251,6 +252,7 @@
 
 (use-package tree-sitter
   :ensure nil
+  :straight (:type built-in)
   :init
   (setq treesit-language-source-alist
 	`((bash . ("https://github.com/tree-sitter/tree-sitter-bash"

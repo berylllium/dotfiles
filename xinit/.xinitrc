@@ -48,6 +48,9 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
+# set key repeat to 200 ms before repeating and 40 repititions per second.
+xset r rate 200 40
+
 setxkbmap us &
 xsetroot -cursor_name left_ptr
 nitrogen --restore &

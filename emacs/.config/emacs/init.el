@@ -28,6 +28,13 @@
 (set-fringe-mode 10)
 (menu-bar-mode -1)
 
+;; Set important variables.
+;;; Set font.
+(set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 110)
+
+;;; Set org directory here so we can use it before the autoload.
+(setq org-directory "~/org")
+
 ;; Functions.
 (defun open-init-file ()
   "Open the init.el file in the current window."
@@ -82,7 +89,10 @@
 
     "h" (cons "help" (make-sparse-keymap))
     "hf" 'describe-function
-    "hv" 'describe-variable))
+    "hv" 'describe-variable
+
+    "o" (cons "org" (make-sparse-keymap))
+    "oo" '("org files" . (lambda () (interactive) (find-file org-directory)))))
 
 ;;; ========== EVIL ==========
 ;;; VIM bindings in emacs :).
@@ -182,3 +192,76 @@
   (completion-category-overrides '((file (styles orderless partial-completion))))
   (orderless-component-seperator #'orderless-escapable-split-on-space))
 
+;;; ========== Coding ==========
+;;; Automatic parens.
+;;; NOTE: Only enabled in emacs-lisp-mode.
+(use-package smartparens
+  :hook (emacs-lisp-mode-hook . smartparens-mode))
+
+;;; ========== Orgmode ==========
+;;; Helper functions for org.
+(defun org-init-appearance-h ()
+  "Configure org UI."
+  (setq org-indirect-buffer-display 'current-window
+	org-hide-leading-stars t
+	org-fontify-done-headline t
+	org-fontify-quote-and-verse-blocks t
+	org-fontify-whole-heading-line t
+	org-startup-indented t
+	org-tags-column 0
+	org-startup-folded nil)
+
+  ;; Scale up the previews.
+  (plist-put org-latex-preview-appearance-options :scale 1.2))
+
+(defun org-init-hacks-h ()
+  "Getting org to behave."
+  ;; Open file links in current window, instead of new ones.
+  (setf (alist-get 'file org-link-frame-setup) #'find-file)
+  ;; Open directory links in dired.
+  (add-to-list 'org-file-apps '(directory . emacs))
+  (add-to-list 'org-file-apps '(remote . emacs)))
+
+;;; We use a special fork of org that allows for async and automatic latex previews.
+;;; TODO: Revert to emacs org when this fork gets merged.
+(use-package org
+  :ensure 
+  :straight `(org
+              :fork (:host nil
+                     :repo "https://git.tecosaur.net/tec/org-mode.git"
+                     :branch "dev"
+                     :remote "tecosaur"
+					 :depth 1)
+              :files (:defaults "etc")
+              :build t
+              :pre-build
+              (with-temp-file "org-version.el"
+               (require 'lisp-mnt)
+               (let ((version
+                      (with-temp-buffer
+                        (insert-file-contents "lisp/org.el")
+                        (lm-header "version")))
+                     (git-version
+                      (string-trim
+                       (with-temp-buffer
+                         (call-process "git" nil t nil "rev-parse" "--short" "HEAD")
+                         (buffer-string)))))
+                (insert
+                 (format "(defun org-release () \"The release version of Org.\" %S)\n" version)
+                 (format "(defun org-git-version () \"The truncate git commit hash of Org mode.\" %S)\n" git-version)
+                 "(provide 'org-version)\n")))
+              :pin nil)
+  :hook ((org-mode . org-latex-preview-auto-mode)
+	 ;; Load all latex previews upon entering a buffer. This should
+	 ;; happen asyncronously.
+	 (org-mode . (lambda () (with-current-buffer (current-buffer)
+				       (org-latex-preview '(16))))))
+  :config
+  (org-init-appearance-h)
+  (org-init-hacks-h)
+
+  (setq org-latex-preview-live t
+	org-latex-preview-live-debounce 0.25))
+
+;;; Live updated table of contents in org-mode.
+(use-package toc-org

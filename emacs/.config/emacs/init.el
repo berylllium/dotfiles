@@ -39,8 +39,8 @@
 (setq indent-tabs-mode nil)
 
 ;;; Enable line numbering only in programming buffers.
-(setq-default display-line-numbers-type 'relative)
-(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+;;(setq-default display-line-numbers-type 'relative)
+;;(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Functions.
 (defun open-init-file ()
@@ -64,6 +64,7 @@
   :after evil
   :config
   (general-auto-unbind-keys)
+  (general-evil-setup)
 
   (general-define-key
    :states '(normal insert motion visual emacs)
@@ -125,6 +126,12 @@
   (evil-want-integration t)
   :config
   (evil-collection-init))
+
+(use-package avy
+  :after evil
+  :general
+  (general-nmap
+    "s" 'avy-goto-char-2))
 
 ;;; ========== Appearance ==========
 ;;; Gruvbox theme.

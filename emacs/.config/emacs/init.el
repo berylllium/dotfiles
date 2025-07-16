@@ -18,7 +18,8 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; Disable base emacs features.
+;; Emacs settings.
+;; Disable base Emacs features.
 (setq inhibit-startup-message t
       make-backup-files nil)
 
@@ -28,12 +29,18 @@
 (set-fringe-mode 10)
 (menu-bar-mode -1)
 
-;; Set important variables.
 ;;; Set font.
 (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 110)
 
 ;;; Set org directory here so we can use it before the autoload.
 (setq org-directory "~/org")
+
+;;; Disable the usage of tab characters.
+(setq indent-tabs-mode nil)
+
+;;; Enable line numbering only in programming buffers.
+(setq-default display-line-numbers-type 'relative)
+(add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
 ;; Functions.
 (defun open-init-file ()
@@ -81,6 +88,7 @@
 
     "e" (cons "eval" (make-sparse-keymap))
     "el" 'eval-last-sexp
+    "er" 'eval-region
 
     "f" (cons "file" (make-sparse-keymap))
     "ff" 'find-file
@@ -209,20 +217,25 @@
 (use-package smartparens
   :hook ((prog-mode org-mode). smartparens-mode))
 
+;;; LSP.
+(use-package lsp-mode
+  :hook (lsp-mode . lsp-enable-which-key-integration)
+  :commands (lsp lsp-deferred))
+
 ;;; ========== Git ==========
 ;;; Custom magit display buffer function.
 (defun my-magit-display-buffer (buffer)
   "Display only the status buffer in the current window, otherwise create a new one."
   (display-buffer
    buffer (if (and (derived-mode-p 'magit-mode)
-		   (memq (with-current-buffer buffer major-mode)
-			 '(magit-process-mode
-			   magit-revision-mode
-			   magit-diff-mode
-			   magit-stash-mode
-			   magit-status-mode)))
-	      nil
-	    '(display-buffer-same-window))))
+                   (memq (with-current-buffer buffer major-mode)
+                         '(magit-process-mode
+                           magit-revision-mode
+                           magit-diff-mode
+                           magit-stash-mode
+                           magit-status-mode)))
+              nil
+            '(display-buffer-same-window))))
 
 ;;; Magit.
 (use-package magit
@@ -238,13 +251,13 @@
 (defun org-init-appearance-h ()
   "Configure org UI."
   (setq org-indirect-buffer-display 'current-window
-	org-hide-leading-stars t
-	org-fontify-done-headline t
-	org-fontify-quote-and-verse-blocks t
-	org-fontify-whole-heading-line t
-	org-startup-indented t
-	org-tags-column 0
-	org-startup-folded nil)
+        org-hide-leading-stars t
+        org-fontify-done-headline t
+        org-fontify-quote-and-verse-blocks t
+        org-fontify-whole-heading-line t
+        org-startup-indented t
+        org-tags-column 0
+        org-startup-folded nil)
 
   ;; Scale up the previews.
   (plist-put org-latex-preview-appearance-options :scale 1.2))
@@ -287,13 +300,13 @@
                  "(provide 'org-version)\n")))
               :pin nil)
   :hook ((org-mode . org-latex-preview-auto-mode)
-	 ;; Load all latex previews upon entering a buffer. This should
-	 ;; happen asyncronously.
-	 (org-mode . (lambda () (with-current-buffer (current-buffer)
-				       (org-latex-preview '(16))))))
+         ;; Load all latex previews upon entering a buffer. This should
+         ;; happen asyncronously.
+         (org-mode . (lambda () (with-current-buffer (current-buffer)
+                                  (org-latex-preview '(16))))))
   :config
   (org-init-appearance-h)
   (org-init-hacks-h)
 
   (setq org-latex-preview-live t
-	org-latex-preview-live-debounce 0.25))
+        org-latex-preview-live-debounce 0.25))

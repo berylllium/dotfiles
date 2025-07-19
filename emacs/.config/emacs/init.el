@@ -1,3 +1,7 @@
+;;; -*- lexical-binding: t -*-
+;;; init.el --- Initialization file for Emacs.
+;;; Commentary: Emacs Startup File --- initialzation for Emacs.
+
 ;; Bootstraps.
 ;;; Bootstrap straight.
 (setq straight-use-package-by-default t)
@@ -33,11 +37,21 @@
   (set-fringe-mode 10)
   (menu-bar-mode -1)
   ;; Set font.
-  (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono" :height 110)
+  (set-face-attribute 'default nil :family "FiraCode Nerd Font Mono"
+		      :height 110)
 
   ;; Enable line numbering only in programming buffers.
   ;;(setq-default display-line-numbers-type 'relative)
   ;;(add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
+  ;; Set fill column to 100 and enable auto-fill-mode in org and elisp
+  ;; files.
+  (setq-default fill-column 100)
+  (add-hook 'org-mode-hook 'auto-fill-mode)
+  (add-hook 'emacs-lisp-mode-hook 'auto-fill-mode)
+
+  (add-hook 'org-mode-hook 'display-fill-column-indicator-mode)
+  (add-hook 'prog-mode-hook 'display-fill-column-indicator-mode)
   
   ;; Disable the usage of tab characters.
   (setq indent-tabs-mode nil))
@@ -57,7 +71,8 @@
 
 ;; Packages.
 ;;; use-package configuration.
-(setq use-package-always-ensure t) ;; Always ensure packages are installed.
+;;; Always ensure packages are installed.
+(setq use-package-always-ensure t) 
 
 ;;; ========== GENERAL ==========
 (use-package general
@@ -76,6 +91,7 @@
   (general-create-definer tyrant-def :keymaps 'tyrant-map)
   (tyrant-def "" nil)
 
+  ;; Global keybindings.
   (tyrant-def
     "SPC" '("M-x" . execute-extended-command)
 
@@ -102,7 +118,14 @@
     "hv" 'describe-variable
 
     "o" (cons "org" (make-sparse-keymap))
-    "oo" '("org files" . (lambda () (interactive) (find-file org-directory)))))
+    "oo" '("org files" . (lambda () (interactive) (find-file
+						   org-directory)))
+    "c" (cons "code" (make-sparse-keymap)))
+
+  (tyrant-def
+    :keymaps 'minibuffer-mode-map
+    "C-j" 'vertico-next
+    "C-k" 'vertico-previous))
 
 ;;; ========== EVIL ==========
 ;;; VIM bindings in emacs :).
@@ -138,38 +161,40 @@
 ;;; ========== Appearance ==========
 ;;; Gruvbox theme.
 (use-package gruvbox-theme
-  ;; Use a hook to only load the theme after the init hook as completed to ensure
-  ;; the theme has been autoloaded.
-  :hook (after-init-hook . (lambda () (load-theme 'gruvbox-dark-medium t))))
+  ;; Use a hook to only load the theme after the init hook as
+  ;; completed to ensure the theme has been autoloaded.
+  :hook (after-init-hook . (lambda () (load-theme 'gruvbox-dark-medium
+						  t)))) 
 
 ;;; Doom modeline.
 (use-package doom-modeline
   :init
   (doom-modeline-mode 1))
 
-;;; Highlighting todo's in comments. I got the keyword faces from the doom emacs config.
+;;; Highlighting todo's in comments. I got the keyword faces from the
+;;; doom emacs config. 
 (use-package hl-todo
-  :hook (prog-mode . hl-todo-mode)
+  :hook ((org-mode prog-mode) . hl-todo-mode)
   :custom
   (hl-todo-highlight-punctuation ":")
   (hl-todo-keyword-faces
    '(;; For reminders to change or add something at a later date. TODO
      ("TODO" warning bold)
-     ;; For code (or code paths) that are broken, unimplemented, or slow,
-     ;; and may become bigger problems later.
+     ;; For code (or code paths) that are broken, unimplemented, or
+     ;; slow, and may become bigger problems later.
      ("FIXME" error bold)
-     ;; For code that needs to be revisited later, either to upstream it,
-     ;; improve it, or address non-critical issues.
+     ;; For code that needs to be revisited later, either to upstream
+     ;; it, improve it, or address non-critical issues.
      ("REVIEW" font-lock-keyword-face bold)
      ;; For code smells where questionable practices are used
      ;; intentionally, and/or is likely to break in a future update.
      ("HACK" font-lock-constant-face bold)
-     ;; For sections of code that just gotta go, and will be gone soon.
-     ;; Specifically, this means the code is deprecated, not necessarily
-     ;; the feature it enables.
+     ;; For sections of code that just gotta go, and will be gone
+     ;; soon. Specifically, this means the code is deprecated, not
+     ;; necessarily the feature it enables.
      ("DEPRECATED" font-lock-doc-face bold)
-     ;; Extra keywords commonly found in the wild, whose meaning may vary
-     ;; from project to project.
+     ;; Extra keywords commonly found in the wild, whose meaning may
+     ;; vary from project to project.
      ("NOTE" success bold)
      ("BUG" error bold)
      ("XXX" font-lock-constant-face bold))))
@@ -212,8 +237,10 @@
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles orderless partial-completion))))
-  (orderless-component-seperator #'orderless-escapable-split-on-space))
+  (completion-category-overrides '((file (styles orderless
+						 partial-completion))))
+  (orderless-component-seperator
+   #'orderless-escapable-split-on-space)) 
 
 ;;; ========== Projectile ==========
 (use-package projectile
@@ -223,35 +250,62 @@
     "pf" 'projectile-find-file
     "pp" 'projectile-switch-project)
   :config
-  (setq projectile-project-search-path '(("~/dotfiles" . 0) ("~/prgm" . 2)))
+  (setq projectile-project-search-path '(("~/dotfiles" . 0) ("~/prgm"
+							     . 2))) 
   (projectile-mode +1))
 
 ;;; ========== Coding ==========
-;;; Automatic parens.
+;;; Automatic parens.lsp-ui-doc
 ;;; NOTE: Only enabled in emacs-lisp-mode.
 (use-package smartparens
   :hook ((prog-mode org-mode). smartparens-mode))
 
+;;; Show indentation guide bars.
+(use-package highlight-indent-guides
+  :hook (prog-mode . highlight-indent-guides-mode))
+
 ;;; LSP.
+(defun berry/lsp-ui-use-doc ()
+  "When doc not visible, glimpse doc. When doc visible and not focussed, focus
+doc.  When doc visible and focussed, unfocus doc." 
+  (interactive)
+  (if (lsp-ui-doc--visible-p)
+      (if (frame-parameter (lsp-ui-doc--get-frame)
+			   'lsp-ui-doc--no-focus)
+	  (lsp-ui-doc-focus-frame)
+	(lsp-ui-doc-hide))
+    (lsp-ui-doc-glance)));; Always ensure packages are installed. 
+
 (use-package lsp-mode
   :hook (lsp-mode . lsp-enable-which-key-integration)
-  :commands (lsp lsp-deferred)
+  :commands lsp
+  :general
+  (tyrant-def
+    "l" (cons "lsp" (make-sparse-keymap))
+    "la" 'lsp-execute-code-action)
   :config
   (setq lsp-headerline-breadcrumb-enable nil))
 
 (use-package lsp-ui
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :general
+  (general-nmap
+    "K" 'berry/lsp-ui-use-doc)
+  :config
+  (setq lsp-ui-doc-enable t
+	lsp-ui-doc-show-with-mouse nil))
+
+(use-package flycheck
+  :hook (after-init . global-flycheck-mode))
 
 ;; Tree sitter. HOPEFULLY THE BUILT IN ONE.
 (defun berry/tree-sitter-install-languages ()
-  "Installs all the languages in `treesit-language-source-alist'."
+  "Install all the languages in `treesit-language-source-alist'."
   (interactive)
   (mapc #'treesit-install-language-grammar
 	(mapcar #'car treesit-language-source-alist)))
 
 (use-package tree-sitter
-  :ensure nil
-  :straight (:type built-in)
   :init
   (setq treesit-language-source-alist
 	`((bash . ("https://github.com/tree-sitter/tree-sitter-bash"
@@ -267,14 +321,22 @@
 
 (use-package rust-mode
   :hook (rust-mode . lsp)
+  :general
+  (tyrant-def
+    "cr" (cons "rust" (make-sparse-keymap))
+    "crb" 'rust-compile
+    "crc" 'rust-check
+    "crt" 'rust-test
+    "crr" 'rust-run)
   :init
   (setq rust-mode-treesitter-derive t
 	rust-format-on-save t))
 
 ;;; ========== Git ==========
 ;;; Custom magit display buffer function.
-(defun my-magit-display-buffer (buffer)
-  "Display only the status buffer in the current window, otherwise create a new one."
+(defun berry/magit-display-buffer (buffer)
+  "Display only the status buffer in the current window, otherwise
+create a new one." 
   (display-buffer
    buffer (if (and (derived-mode-p 'magit-mode)
                    (memq (with-current-buffer buffer major-mode)
@@ -293,7 +355,7 @@
     "g" (cons "git" (make-sparse-keymap))
     "gg" 'magit-status)
   :config
-  (setq magit-display-buffer-function #'my-magit-display-buffer))
+  (setq magit-display-buffer-function #'berry/magit-display-buffer))
 
 ;;; ========== Orgmode ==========
 ;;; Helper functions for org.
@@ -309,7 +371,7 @@
         org-startup-folded nil)
 
   ;; Scale up the previews.
-  (plist-put org-latex-preview-appearance-options :scale 1.2))
+  (plist-put org-latex-preview-appearance-options :scale 1.5))
 
 (defun org-init-hacks-h ()
   "Getting org to behave."
@@ -319,7 +381,8 @@
   (add-to-list 'org-file-apps '(directory . emacs))
   (add-to-list 'org-file-apps '(remote . emacs)))
 
-;;; We use a special fork of org that allows for async and automatic latex previews.
+;;; We use a special fork of org that allows for async and automatic
+;;; latex previews.
 ;;; TODO: Revert to emacs org when this fork gets merged.
 (use-package org
   :ensure 
@@ -349,8 +412,8 @@
                  "(provide 'org-version)\n")))
               :pin nil)
   :hook ((org-mode . org-latex-preview-auto-mode)
-         ;; Load all latex previews upon entering a buffer. This should
-         ;; happen asyncronously.
+         ;; Load all latex previews upon entering a buffer. This
+	 ;; should happen asyncronously.
          (org-mode . (lambda () (with-current-buffer (current-buffer)
                                   (org-latex-preview '(16))))))
   :init

@@ -17,6 +17,6 @@ alias ls='ls --color=auto'
 alias cpc='xclip -sel c <'
 PS1='[\u@\h \W]\$ '
 
-export PATH="/home/$USER/prgm/godot/engine/godot4:/home/$USER/bin:$PATH"
+export PATH="/home/$USER/.config/emacs/bin:/home/$USER/bin:$PATH"
 
 eval "$(starship init bash)"

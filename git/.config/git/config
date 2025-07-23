@@ -1,0 +1,13 @@
+[user]
+	name = Berkay Kaplan
+	email = berkaykaplan@protonmail.com
+	signingkey = berkaykaplan@protonmail.com
+
+[core]
+	editor = nvim
+
+[commit]
+	gpgsign = true
+
+[tag]
+	gpgSign = true

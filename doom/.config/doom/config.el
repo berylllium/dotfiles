@@ -65,6 +65,9 @@
 ;; Word wrapping.
 (global-visual-line-mode t)
 
+;; Disable evil-snipe.
+(remove-hook 'doom-first-input-hook #'evil-snipe-mode)
+
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
 ;;
@@ -102,6 +105,9 @@
 
 (after! rustic
   (setq rustic-format-trigger 'on-save))
+
+(map! :n "s" 'avy-goto-char-2
+      :n "S" 'avy-goto-line)
 
 (map! :leader
       (:prefix ("e" . "eval")

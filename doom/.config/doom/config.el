@@ -42,25 +42,28 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
-(setq projectile-project-search-path '(("~/prgm/" . 2))
-      fill-column 80
-      global-display-fill-column-indicator-mode t)
+(setq projectile-project-search-path '(("~/prgm/" . 2)))
 
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
-(plist-put org-latex-preview-appearance-options
-           :page-width 0.8)
+;; (plist-put org-latex-preview-appearance-options
+;;            :page-width 0.8)
 
 (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
 
-(setq org-latex-preview-live t)
-(setq org-latex-preview-live-debounce 0.25)
+;; (setq org-latex-preview-live t)
+;; (setq org-latex-preview-live-debounce 0.25)
 
 (turn-on-auto-fill)
 
 ;; Indentation
-(setq indent-tabs-mode nil
-      tab-width 4)
+(setq-default indent-tabs-mode nil
+              c-basic-offset 4
+              tab-width 4)
+
+;; Set fill column and enable global fill column indicator.
+(setq-default fill-column 100)
+(global-display-fill-column-indicator-mode)
 
 ;; Word wrapping.
 (global-visual-line-mode t)
@@ -103,20 +106,25 @@
 (after! evil-escape
   (setq evil-escape-key-sequence "jk"))
 
-(after! rustic
-  (setq rustic-format-trigger 'on-save))
+;; (after! rustic
+;;   (setq rustic-format-trigger 'on-save))
 
-(map! :n "s" 'avy-goto-char-2
-      :n "S" 'avy-goto-line)
+(after! lsp-ui
+  (setq lsp-ui-sideline-show-diagnostics t
+        lsp-ui-sideline-show-code-actions t
+        lsp-ui-sideline-diagnostic-max-lines 8))
+
+(map! :n "s" 'avy-goto-char-2)
+(map! :n "S" 'avy-goto-line)
 
 (map! :leader
       (:prefix ("e" . "eval")
-               :desc "Eval last sexp"
-               "l" 'eval-last-sexp
-               :desc "Eval region"
-               "r" 'eval-region
-               :desc "Eval buffer"
-               "b" 'eval-buffer)
+       :desc "Eval last sexp"
+       "l" 'eval-last-sexp
+       :desc "Eval region"
+       "r" 'eval-region
+       :desc "Eval buffer"
+       "b" 'eval-buffer)
       (:prefix "o"
                "o" (lambda () (interactive) (doom-project-find-file org-directory))))
 

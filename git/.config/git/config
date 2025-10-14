@@ -1,7 +1,7 @@
 [user]
 	name = Berkay Kaplan
-	email = berkaykaplan@protonmail.com
-	signingkey = berkaykaplan@protonmail.com
+	email = berkaykaplan@pm.me
+	signingkey = berkaykaplan@pm.me
 
 [core]
 	editor = nvim

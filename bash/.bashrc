@@ -29,6 +29,6 @@ PS1='[\u@\h \W]\$ '
 
 export AWT_TOOLKIT=MToolkit
 export _JAVA_AWT_WM_NONREPARENTING=1
-export PATH="/home/$USER/.config/emacs/bin:/home/$USER/bin:$PATH"
+export PATH="/home/$USER/.cargo/bin:/home/$USER/.config/emacs/bin:/home/$USER/bin:$PATH"
 
 eval "$(starship init bash)"

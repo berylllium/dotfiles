@@ -46,7 +46,9 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
-(setq projectile-project-search-path '(("~/prgm/" . 2) ("~/prgm/godot/project/" . 2)))
+(setq projectile-project-search-path '(("~/prgm/" . 2)
+                                       ("~/prgm/rust/fork/" . 1)
+                                       ("~/prgm/godot/project/" . 2)))
 
 (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
@@ -121,6 +123,9 @@
   (setq lsp-ui-sideline-show-diagnostics nil
         lsp-ui-sideline-show-code-actions nil
         lsp-ui-sideline-diagnostic-max-lines 8))
+
+(after! doom-cli-env
+  (add-to-list 'doom-env-allow "^SSH_"))
 
 (map! :n "s" 'avy-goto-char-2)
 (map! :n "S" 'avy-goto-line)

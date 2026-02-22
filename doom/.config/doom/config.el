@@ -55,7 +55,7 @@
 ;; (plist-put org-latex-preview-appearance-options
 ;;            :page-width 0.8)
 
-(add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+;;(add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
 
 ;; (setq org-latex-preview-live t)
 ;; (setq org-latex-preview-live-debounce 0.25)

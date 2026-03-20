@@ -1,0 +1,64 @@
+[
+  // Leader normal mode mappings.
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      // Command Palette
+      "space space": "command_palette::Toggle",
+      // Code bindings.
+      "space c a": "editor::ToggleCodeActions",
+      // Project bindings.
+      "space p r": "task::Spawn",
+      "space p f": "file_finder::Toggle",
+      // File bindings.
+      "space f k": "zed::OpenKeymapFile",
+      "space f c": "zed::OpenSettingsFile",
+      // Window (pane) bindings.
+      "space w h": "workspace::ActivatePaneLeft",
+      "space w l": "workspace::ActivatePaneRight",
+      "space w k": "workspace::ActivatePaneUp",
+      "space w j": "workspace::ActivatePaneDown",
+      "space w v": "pane::SplitVertical",
+      "space w s": "pane::SplitHorizontal",
+      "space w c": "pane::CloseActiveItem",
+      "space j": "pane::ActivatePreviousItem",
+      "space k": "pane::ActivateNextItem",
+    },
+  },
+  // General insert mode mappings.
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      "j k": "vim::NormalBefore",
+    },
+  },
+  // Allow for ctrl + j/k in menus.
+  {
+    "context": "Picker || (FileFinder > Picker > Editor) || (FileFinder > Picker > menu)",
+    "bindings": {
+      "ctrl-k": "menu::SelectPrevious",
+      "ctrl-j": "menu::SelectNext",
+    },
+  },
+  // Allow for ctrl + j/k in completion/code action context menus.
+  {
+    "context": "Editor && (showing_code_actions || showing_completions)",
+    "bindings": {
+      "ctrl-k": "editor::ContextMenuPrevious",
+      "ctrl-j": "editor::ContextMenuNext",
+    },
+  },
+  // Tab switching.
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "ctrl-l": "tab_switcher::Toggle",
+    },
+  },
+  {
+    "context": "TabSwitcher",
+    "bindings": {
+      "ctrl-l": "tab_switcher::Toggle",
+    },
+  },
+]
